@@ -97,13 +97,6 @@ struct AddOrderResult
 	@optional Json error;
 }
 
-unittest
-{
-	static immutable reference = `{"result":{"descr":{"order":"sell 30.00000000 XRPUSD @ limit 2.50000"},"txid":["OB5RJD-5LSCW-FMIQNU"]},"error":[]}`;
-	auto res = deserializeJson!AddOrderResult(reference);
-	assert(res.result.txid[0] == "OB5RJD-5LSCW-FMIQNU");
-}
-
 ///
 struct TickerInfo
 {
@@ -186,6 +179,13 @@ final class Kraken : KrakenAPI
 		params["pair"] = pair;
 
 		return request!TickerResult(METHOD_URL, params);
+	}
+
+	unittest
+	{
+		auto api = new Kraken("", "");
+		auto res = api.Ticker("XRPUSD");
+		assert(res.result.length > 0);
 	}
 
 	OrderBookResult OrderBook(string pair)
